@@ -1,0 +1,26 @@
+<button class="btn btn-primary" (click)="toggleLoginForm()" [hidden]="isLogged">
+  Login
+</button>
+<button
+  class="btn btn-primary"
+  (click)="toggleRegisterForm()"
+  [hidden]="isLogged"
+>
+  Register
+</button>
+<app-login-form
+  *ngIf="hasPressedLogin"
+  [hidden]="isLogged"
+  [isLogged]="isLogged"
+  (isLoggedChange)="isLogged = $event"
+></app-login-form>
+
+<app-register-form
+  *ngIf="hasPressedRegister"
+  [hidden]="isLogged"
+  [isLogged]="isLogged"
+  (isLoggedChange)="isLogged = $event"
+></app-register-form>
+<button class="btn btn-primary" (click)="logout()" [hidden]="!isLogged">
+  Logout
+</button>
