@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserdataService } from '../services/userdata.service';
 
 @Component({
   exportAs: 'ngForm',
@@ -7,17 +8,27 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
-  isLogged = false;
   hasPressedRegister = false;
   hasPressedLogin = false;
+  username: string | null = null;
+  private _isLogged = false;
 
-  constructor() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
+  get isLogged(): boolean {
+    this._isLogged = this.userdataService.isLogged;
+    if (this._isLogged) {
+      this.username = this.userdataService.userData?.username || null;
     }
+    return this.userdataService.isLogged;
+  }
+
+  public updateLoginState() {
+    this._isLogged = this.userdataService.isLogged;
+    if (this._isLogged)
+      this.username = this.userdataService.userData?.username || null;
+  }
+
+  constructor(private userdataService: UserdataService) {
+    this.updateLoginState();
   }
 
   toggleRegisterForm() {
@@ -31,7 +42,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.isLogged = false;
+    this.userdataService.logout('user');
+    this.updateLoginState();
   }
 }
