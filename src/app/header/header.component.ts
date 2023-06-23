@@ -23,8 +23,11 @@ export class HeaderComponent {
 
   public updateLoginState() {
     this._isLogged = this.userdataService.isLogged;
-    if (this._isLogged)
+    if (this._isLogged) {
       this.username = this.userdataService.userData?.username || null;
+      this.hasPressedLogin = false;
+      this.hasPressedRegister = false;
+    }
   }
 
   constructor(private userdataService: UserdataService) {

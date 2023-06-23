@@ -8,8 +8,6 @@ export class CookieService {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   }
   setCookie(name: string, value: string, days: number) {
-    console.log(value);
-
     const date = new Date();
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     const expires = `expires=${date.toUTCString()}`;

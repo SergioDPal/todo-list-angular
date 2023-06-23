@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { UserdataService } from '../services/userdata.service';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-login-form',
@@ -11,32 +11,22 @@ export class LoginFormComponent {
   @Input() isLogged = false;
   @Output() isLoggedChange = new EventEmitter<boolean>();
 
-  constructor(private userdataService: UserdataService) {}
+  constructor(
+    private apiService: ApiService
+  ) {}
 
-  async onSubmit(myForm: NgForm) {
+  onSubmit(myForm: NgForm) {
     const { email, password } = myForm.form.value;
-    const response = await fetch('http://localhost:8080/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      delete data.message;
-      this.userdataService.userData = data;
+    try {
+      this.apiService.loginUser(email, password);
       this.clearForm(myForm);
-    } else {
-      const errorData = await response.json();
-      window.alert(errorData.message);
+      this.isLoggedChange.emit(this.isLogged);
+    } catch (error) {
+      console.error(error);
     }
-
-    this.isLoggedChange.emit(this.isLogged);
   }
 
-  public clearForm(myForm: NgForm) {
+  clearForm(myForm: NgForm) {
     myForm.reset();
   }
 }

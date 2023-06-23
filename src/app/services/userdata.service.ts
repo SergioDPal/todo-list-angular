@@ -19,7 +19,6 @@ export class UserdataService {
   }
 
   set userData(value) {
-    this.cookieService.setCookie('user', JSON.stringify(value), 7);
     this._userData = value;
   }
 
@@ -30,5 +29,10 @@ export class UserdataService {
   public logout(username: string) {
     this.cookieService.deleteCookie(username);
     this._userData = null;
+  }
+
+  public login(user: User) {
+    this.userData = user;
+    this.cookieService.setCookie('user', JSON.stringify(user), 7);
   }
 }
