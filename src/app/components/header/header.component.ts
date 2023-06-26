@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserdataService } from '../services/userdata.service';
+import { UserdataService } from '../../services/userdata.service';
 
 @Component({
   exportAs: 'ngForm',
