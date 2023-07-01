@@ -1,51 +1,49 @@
 import { Component } from '@angular/core';
-import { UserdataService } from '../../services/userdata.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/models/user';
 
 @Component({
-  exportAs: 'ngForm',
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  hasPressedRegister = false;
-  hasPressedLogin = false;
+  isLoggedIn$: Observable<boolean>;
+  currentUser$: Observable<User | null>;
   username: string | null = null;
-  private _isLogged = false;
+  showLogin = false;
+  showRegister = false;
 
-  get isLogged(): boolean {
-    this._isLogged = this.userdataService.isLogged;
-    if (this._isLogged) {
-      this.username = this.userdataService.userData?.username || null;
-    }
-    return this.userdataService.isLogged;
-  }
-
-  public updateLoginState() {
-    this._isLogged = this.userdataService.isLogged;
-    if (this._isLogged) {
-      this.username = this.userdataService.userData?.username || null;
-      this.hasPressedLogin = false;
-      this.hasPressedRegister = false;
-    }
-  }
-
-  constructor(private userdataService: UserdataService) {
-    this.updateLoginState();
-  }
-
-  toggleRegisterForm() {
-    this.hasPressedRegister = !this.hasPressedRegister;
-    this.hasPressedLogin = false;
+  constructor(private authenticationService: AuthenticationService) {
+    this.isLoggedIn$ = this.authenticationService.isLoggedIn$;
+    this.currentUser$ = this.authenticationService.currentUser$;
+    this.currentUser$.subscribe((user) => {
+      if (user) {
+        this.username = user.username;
+      } else {
+        this.username = null;
+      }
+    });
   }
 
   toggleLoginForm() {
-    this.hasPressedLogin = !this.hasPressedLogin;
-    this.hasPressedRegister = false;
+    this.showRegister = false;
+    this.showLogin = !this.showLogin;
+  }
+
+  toggleRegisterForm() {
+    this.showLogin = false;
+    this.showRegister = !this.showRegister;
   }
 
   logout() {
-    this.userdataService.logout('user');
-    this.updateLoginState();
+    this.authenticationService.logoutUser();
+    this.showLogin = false;
+    this.showRegister = false;
+  }
+
+  stopPropagation(event: Event) {
+    event.stopPropagation();
   }
 }

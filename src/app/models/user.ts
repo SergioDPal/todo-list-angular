@@ -1,40 +1,22 @@
 import { Task } from './task';
 
 export class User {
-  id: number;
-  username: string;
-  email: string;
-  token: string;
-  tasks: Task[] = [];
+  constructor(
+    public username: string,
+    public email: string,
+    public tasks: Task[] = [],
+    public id?: number,
+    public token?: string
+  ) {}
 
-  constructor(id: number, username: string, email: string, token: string) {
-    this.token = token;
-    this.id = id;
-    this.username = username;
-    this.email = email;
+  addTask(task: Task): void {
+    this.tasks.push(task);
   }
 
-  public addTask(task: Task) {
-    this.tasks = [...this.tasks, task];
-  }
-
-  public setTasks(tasks: Task[]) {
-    this.tasks = tasks;
-  }
-
-  public removeTask(task: Task) {
+  removeTask(task: Task): void {
     const index = this.tasks.indexOf(task);
-    this.tasks.splice(index, 1);
-  }
-
-  public getTasks() {
-    return this.tasks;
-  }
-
-  public getTask(id: number) {
-    if (!this.tasks) {
-      return null;
+    if (index !== -1) {
+      this.tasks.splice(index, 1);
     }
-    return this.tasks.find((task) => task.id === id);
   }
 }

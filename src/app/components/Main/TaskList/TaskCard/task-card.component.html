@@ -1,0 +1,17 @@
+<li>
+  <section *ngIf="task" class="card">
+    <section *ngIf="openEditForm">
+      <app-edit-task-form
+        [task]="task"
+        (showEditFormChange)="toggleEditForm()"
+      ></app-edit-task-form>
+    </section>
+    <section *ngIf="!openEditForm" class="card-body">
+      <h5 class="card-title">{{ task.title }}</h5>
+      <p class="card-text">{{ task.description }}</p>
+      <p class="card-text">{{ task.dueDate }}</p>
+    </section>
+    <button class="btn btn-primary" (click)="toggleEditForm()">Edit</button>
+    <button class="btn btn-primary" (click)="askConfirmation()">Delete</button>
+  </section>
+</li>

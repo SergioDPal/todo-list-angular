@@ -1,27 +1,13 @@
 export class Task {
-  id: number;
+  id?: number;
   title: string;
   description: string;
-  dueDate: Date;
-  status: string;
-  userId: number;
-  priority: string;
+  dueDate?: Date;
 
-  constructor(
-    id: number,
-    title: string,
-    description: string,
-    dueDate: Date,
-    status: string,
-    userId: number,
-    priority: string
-  ) {
+  constructor(title: string, description: string, id?: number, dueDate?: Date) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.status = status;
-    this.userId = userId;
-    this.priority = priority;
   }
 }

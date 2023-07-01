@@ -1,31 +1,42 @@
-<button
-  class="btn btn-primary"
-  (click)="toggleLoginForm()"
-  [hidden]="this.isLogged"
->
-  Login
-</button>
-<button
-  class="btn btn-primary"
-  (click)="toggleRegisterForm()"
-  [hidden]="this.isLogged"
->
-  Register
-</button>
-<app-login-form
-  *ngIf="hasPressedLogin"
-  [hidden]="this.isLogged"
-  [isLogged]="isLogged"
-  (isLoggedChange)="this.updateLoginState()"
-></app-login-form>
+<div class="header-container">
+  <div class="menu" *ngIf="!(isLoggedIn$ | async); else welcomeMessage">
+    <button class="btn btn-primary" (click)="toggleLoginForm()">Login</button>
+    <button class="btn btn-primary" (click)="toggleRegisterForm()">
+      Register
+    </button>
+  </div>
+  <ng-template #welcomeMessage>
+    <button class="btn btn-logout" (click)="logout()">Logout</button>
+    <h2 *ngIf="currentUser$ | async">Welcome {{ username }}</h2>
+  </ng-template>
+</div>
 
-<app-register-form
-  *ngIf="hasPressedRegister"
-  [hidden]="this.isLogged"
-  [isLogged]="this.isLogged"
-  (isLoggedChange)="this.updateLoginState()"
-></app-register-form>
-<button class="btn btn-primary" (click)="logout()" [hidden]="!isLogged">
-  Logout
-</button>
-<h2 [hidden]="!isLogged">Welcome {{ username }}</h2>
+<div
+  *ngIf="showLogin && !(isLoggedIn$ | async)"
+  class="modal-overlay"
+  (click)="toggleLoginForm()"
+  [ngStyle]="{ 'z-index': showLogin ? 100 : -1 }"
+>
+  <div
+    class="modal-content"
+    [@modalAnimation]="showLogin ? 'open' : 'closed'"
+    (click)="stopPropagation($event)"
+  >
+    <app-login-form></app-login-form>
+  </div>
+</div>
+
+<div
+  *ngIf="showRegister && !(isLoggedIn$ | async)"
+  class="modal-overlay"
+  (click)="toggleRegisterForm()"
+  [ngStyle]="{ 'z-index': showRegister ? 100 : -1 }"
+>
+  <div
+    class="modal-content"
+    [@modalAnimation]="showRegister ? 'open' : 'closed'"
+    (click)="stopPropagation($event)"
+  >
+    <app-register-form></app-register-form>
+  </div>
+</div>
